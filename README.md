@@ -23,7 +23,7 @@ Example Playbook
 
     - hosts: zabbix-frontend
       roles:
-         - mamercad.ansible-zabbix-frontend
+         - mamercad.zabbix-frontend
 
 License
 -------
