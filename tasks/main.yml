@@ -1,0 +1,57 @@
+---
+# tasks file for ansible-zabbix-frontend
+
+- name: install the zabbix repository | {{ inventory_hostname }}
+  yum: name={{ zabbix_repo }} state=present
+  become: yes
+
+- name: install zabbix-web-mysql | {{ inventory_hostname }}
+  yum: name=zabbix-web-mysql state=present
+  become: yes
+
+- name: install httpd | {{ inventory_hostname }}
+  yum: name=httpd state=present
+  become: yes
+
+- name: install php | {{ inventory_hostname }}
+  yum: name=php state=present
+  become: yes
+
+- name: start and enable httpd | {{ inventory_hostname }}
+  service: name=httpd state=started enabled=yes
+  become: yes
+
+- name: fixup max_execution_time in /etc/php.ini
+  replace: dest=/etc/php.ini regexp='^max_execution_time = .*$' replace="max_execution_time = 300" backup=yes
+  notify: restart-httpd
+  become: yes
+
+- name: fixup memory_limit in /etc/php.ini
+  replace: dest=/etc/php.ini regexp='^memory_limit = .*$' replace="memory_limit = 128M" backup=yes
+  notify: restart-httpd
+  become: yes
+
+- name: fixup post_max_size in /etc/php.ini
+  replace: dest=/etc/php.ini regexp='^post_max_size = .*$' replace="post_max_size = 16M" backup=yes
+  notify: restart-httpd
+  become: yes
+
+- name: fixup upload_max_filesize in /etc/php.ini
+  replace: dest=/etc/php.ini regexp='^upload_max_filesize = .*$' replace="upload_max_filesize = 2M" backup=yes
+  notify: restart-httpd
+  become: yes
+
+- name: fixup max_input_time in /etc/php.ini
+  replace: dest=/etc/php.ini regexp='^max_input_time = .*$' replace="max_input_time = 300" backup=yes
+  notify: restart-httpd
+  become: yes
+
+- name: fixup always_populate_raw_post_data in /etc/php.ini
+  replace: dest=/etc/php.ini regexp='^always_populate_raw_post_data = .*$' replace="always_populate_raw_post_data = -1" backup=yes
+  notify: restart-httpd
+  become: yes
+
+- name: fixup date.timezone in /etc/php.ini
+  replace: dest=/etc/php.ini regexp='^;date.timezone =$' replace="date.timezone = {{ timezone }}" backup=yes
+  notify: restart-httpd
+  become: yes
