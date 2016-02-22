@@ -1,23 +1,23 @@
 ---
 # tasks file for ansible-zabbix-frontend
 
-- name: install the zabbix repository | {{ inventory_hostname }}
+- name: install the zabbix repository
   yum: name={{ zabbix_repo }} state=present
   become: yes
 
-- name: install zabbix-web-mysql | {{ inventory_hostname }}
+- name: install zabbix-web-mysql
   yum: name=zabbix-web-mysql state=present
   become: yes
 
-- name: install httpd | {{ inventory_hostname }}
+- name: install httpd
   yum: name=httpd state=present
   become: yes
 
-- name: install php | {{ inventory_hostname }}
+- name: install php
   yum: name=php state=present
   become: yes
 
-- name: start and enable httpd | {{ inventory_hostname }}
+- name: start and enable httpd
   service: name=httpd state=started enabled=yes
   become: yes
 
